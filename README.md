@@ -68,11 +68,7 @@ SELECT * FROM users;
 .quit
 ```
 
-## Suggested resume bullet
-
-Built a C++ SQL database engine from scratch with persistent table storage, transaction buffering, a custom B-Tree integer index, and a rule-based query planner that selects between index seeks and full table scans.
-
-## Good next upgrades
+## Next upgrades
 
 1. Add a write-ahead log (WAL) for crash-safe transactions.
 2. Add secondary index persistence instead of rebuilding indexes at startup.
