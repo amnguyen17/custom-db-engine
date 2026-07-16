@@ -1,25 +1,37 @@
 # CustomDB Engine MVP (C++17)
 
-A compact SQL database engine built from scratch for a strong systems/resume project.
+This project is a simple SQL database engine written in C++17. I built it to better understand how relational databases work internally, including how they store data, execute queries, use indexes, and manage transactions.
 
-## Features implemented
+## Features
 
-- SQL-like REPL
+- SQL-like interactive command-line interface (REPL)
 - `CREATE TABLE`
 - `INSERT INTO`
-- `SELECT * FROM ...` with optional `WHERE col = value`
+- `SELECT * FROM ...` with optional `WHERE column = value` filtering
 - `CREATE INDEX ... ON table(column)` for integer columns
-- Tiny from-scratch B-Tree index for equality lookup on integer keys
-- Extremely simple query planner that chooses either:
+- B-tree index implementation for fast equality lookups on integer keys
+- Simple query planner that chooses between:
   - `INDEX SEEK` when an index exists on the filtered column
   - `FULL TABLE SCAN` otherwise
-- Basic transaction flow:
+- Basic transaction support:
   - `BEGIN`
   - `COMMIT`
   - `ROLLBACK`
-- Disk persistence for table rows under `data/tables/`
+- Disk persistence for table data under `data/tables/`
 
-## Build
+## What I Learned
+
+Building this project helped me gain a better understanding of:
+
+- Database storage and file persistence
+- B-tree indexes and how they improve query performance
+- Basic query planning and execution
+- Transaction handling using commit and rollback
+- Designing a larger C++ project with modular components
+
+## Building the Project
+
+Using CMake:
 
 ```bash
 mkdir build
@@ -28,53 +40,57 @@ cmake ..
 cmake --build .
 ```
 
-Or without CMake:
+Or compile directly with g++:
 
 ```bash
 g++ -std=c++17 -O2 -Wall -Wextra src/main.cpp -o customdb
 ```
 
-## Run
+## Running
 
 ```bash
 ./customdb
 ```
 
-If using CMake from `build/`:
+If using CMake, run the executable from the `build/` directory.
 
-```bash
-./customdb
-```
-
-## Example commands
+## Example
 
 ```sql
 CREATE TABLE users (id INT, name TEXT, age INT);
+
 INSERT INTO users VALUES (1, 'Andrew', 20);
 INSERT INTO users VALUES (2, 'Maya', 22);
 INSERT INTO users VALUES (3, 'Chris', 21);
+
 SELECT * FROM users;
+
 SELECT * FROM users WHERE id = 2;
+
 CREATE INDEX idx_users_id ON users(id);
+
 SELECT * FROM users WHERE id = 2;
+
 BEGIN;
 INSERT INTO users VALUES (4, 'Sara', 24);
 ROLLBACK;
-SELECT * FROM users;
+
 BEGIN;
 INSERT INTO users VALUES (5, 'Nolan', 23);
 COMMIT;
+
 SELECT * FROM users;
+
 .quit
 ```
 
-## Next upgrades
+## Future Improvements
 
-1. Add a write-ahead log (WAL) for crash-safe transactions.
-2. Add secondary index persistence instead of rebuilding indexes at startup.
-3. Support projections like `SELECT name, age FROM users`.
-4. Add joins and a simple cost model.
-5. Add a page manager with fixed-size pages.
-6. Add delete/update support.
-7. Add MVCC or lock-based concurrency.
-4
+- Add a write-ahead log (WAL) for crash recovery
+- Persist indexes instead of rebuilding them at startup
+- Support column projections (e.g. `SELECT name, age FROM users`)
+- Add `UPDATE` and `DELETE` statements
+- Implement joins between tables
+- Add a page manager with fixed-size pages
+- Improve the query planner with a simple cost model
+- Explore MVCC or lock-based concurrency
